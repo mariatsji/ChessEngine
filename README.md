@@ -1,0 +1,4 @@
+ChessEngine
+===========
+
+scala chess engine
