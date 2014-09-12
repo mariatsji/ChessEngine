@@ -1,4 +1,4 @@
-class ChessBoard(occupants: List[(Piece, Square)]) {
+class ChessBoard(val occupants: List[(Piece, Square)]) {
   def add(piece: Piece, square: Square): ChessBoard = new ChessBoard(occupants.::(piece, square))
 }
 
@@ -56,6 +56,4 @@ object ChessBoardBuilder {
       .add(Piece(Bishop, Black), Square('F', 8))
       .add(Piece(Knight, Black), Square('G', 8))
       .add(Piece(Rook, Black), Square('H', 8))
-
-
 }
