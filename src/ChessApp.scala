@@ -1,8 +1,8 @@
-class App {
+object ChessApp {
 
   def main(args: Array[String]) {
     val board = ChessBoardBuilder.build()
-    ChessBoardPrinter.print(board)
+    ChessBoardPrinter.printz(board)
   }
   
 }

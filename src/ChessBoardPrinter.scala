@@ -12,10 +12,33 @@ object ChessBoardPrinter {
     }
   }
 
-  def print(board: ChessBoard): Unit = {
-    //TODO pick up the progress here..
+  def printz(board: ChessBoard): Unit = {
+    def pieceAt(square: Square) : (Square, Option[Piece]) = {
+      val opt: Option[(Piece, Square)] =
+        board.occupants.find(t => t._2.row == square.row && t._2.file == square.file)
+      if (opt.isEmpty) {
+        (square, None)
+      } else {
+        (square, Option(opt.get._1))
+      }
+    }
+    def stringFrom(o: (Square, Option[Piece])) : String = {
+      if (o._2.isEmpty && o._1.file != 'H') {
+        " "
+      } else if (o._2.isEmpty) {
+        " \n"
+      } else if (o._1.file != 'H') {
+        unicodeChessSymbol(o._2.get)
+      } else {
+        unicodeChessSymbol(o._2.get) + "\n"
+      }
+    }
+    val strings = for (
+      row <- 1 to 8;
+      file <- List('A','B','C','D','E','F','G','H')) yield
+        stringFrom(pieceAt(Square(file, row.toShort)))
+    strings.foreach(print)
 
   }
-
 
 }
