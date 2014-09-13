@@ -34,7 +34,7 @@ object ChessBoardPrinter {
       }
     }
     val strings = for (
-      row <- 1 to 8;
+      row <- List(8,7,6,5,4,3,2,1);
       file <- List('A','B','C','D','E','F','G','H')) yield
         stringFrom(pieceAt(Square(file, row.toShort)))
     strings.foreach(print)

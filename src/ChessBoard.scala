@@ -1,5 +1,6 @@
 class ChessBoard(val occupants: List[(Piece, Square)]) {
   def add(piece: Piece, square: Square): ChessBoard = new ChessBoard(occupants.::(piece, square))
+  def without(square: Square): ChessBoard = new ChessBoard(occupants.filter(t => t._2 != square))
 }
 
 case class Piece(pieceType: PieceType, color: Color)
