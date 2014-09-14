@@ -27,15 +27,19 @@ class MoveChecker {
       theSet += new Position(newBoardWithout.add(Piece(Rook(), pawn.color), aheadSquare), position.opponent)
       theSet += new Position(newBoardWithout.add(Piece(Bishop(), pawn.color), aheadSquare), position.opponent)
       theSet += new Position(newBoardWithout.add(Piece(Knight(), pawn.color), aheadSquare), position.opponent)
-    } else if (isStartRow(square, pawn.color) && position.board.isVacant(twoAheadSquare)) {
+    }
+    if (isStartRow(square, pawn.color) && position.board.isVacant(twoAheadSquare)) {
       theSet += new Position(newBoardWithout.add(pawn, twoAheadSquare), position.opponent)
-    } else if (canTakeRight(square, position)._1) {
+    }
+    if (canTakeRight(square, position)._1) {
       theSet += new Position(newBoardWithout
         .without(canTakeRight(square, position)._2.get), position.opponent)
-    } else if (canTakeLeft(square, position)._1) {
+    }
+    if (canTakeLeft(square, position)._1) {
       theSet += new Position(newBoardWithout
         .without(canTakeLeft(square, position)._2.get), position.opponent)
-    } else if (position.enPassantRow.nonEmpty) {
+    }
+    if (position.enPassantRow.nonEmpty) {
       //todo
     }
     theSet.toSet.filter(isLegal)
@@ -83,5 +87,17 @@ class MoveChecker {
 
   def kingCanGoTo(position: Position, tuple: (Piece, Square)): Set[Position] = ???
 
+
+}
+
+object MoveChecker extends App {
+
+  private val printer = ChessBoardPrinter
+  private val checker: MoveChecker = new MoveChecker()
+  private val board = ChessBoardBuilder.newBoard()
+  private val position = new Position(board, White)
+  val whitePawns = position.board.occupants.filter(p => p._1.color == position.inTheMove && p._1.pieceType == Pawn())
+  private val pawnOpenings = whitePawns.flatMap(checker.possiblePositions(position, _))
+  pawnOpenings.map(_.board).foreach(ChessBoardPrinter.printz)
 
 }
