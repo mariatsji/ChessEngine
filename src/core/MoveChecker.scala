@@ -21,25 +21,49 @@ class MoveChecker {
     val aheadSquare = pawnAheadSquare(square, pawn.color)
     val twoAheadSquare = pawnAheadSquare(aheadSquare, pawn.color)
     if(position.board.isVacant(aheadSquare) && !isPromotionRow(aheadSquare, pawn.color)) {
-      theSet += new Position(newBoardWithout.add(pawn, aheadSquare), position.opponent, false)
+      theSet += new Position(newBoardWithout.add(pawn, aheadSquare), position.opponent)
     } else if (isPromotionRow(aheadSquare, pawn.color)) {
-      theSet += new Position(newBoardWithout.add(Piece(Queen(), pawn.color), aheadSquare), position.opponent, false)
-      theSet += new Position(newBoardWithout.add(Piece(Rook(), pawn.color), aheadSquare), position.opponent, false)
-      theSet += new Position(newBoardWithout.add(Piece(Bishop(), pawn.color), aheadSquare), position.opponent, false)
-      theSet += new Position(newBoardWithout.add(Piece(Knight(), pawn.color), aheadSquare), position.opponent, false)
+      theSet += new Position(newBoardWithout.add(Piece(Queen(), pawn.color), aheadSquare), position.opponent)
+      theSet += new Position(newBoardWithout.add(Piece(Rook(), pawn.color), aheadSquare), position.opponent)
+      theSet += new Position(newBoardWithout.add(Piece(Bishop(), pawn.color), aheadSquare), position.opponent)
+      theSet += new Position(newBoardWithout.add(Piece(Knight(), pawn.color), aheadSquare), position.opponent)
     } else if (isStartRow(square, pawn.color) && position.board.isVacant(twoAheadSquare)) {
-      theSet += new Position(newBoardWithout.add(pawn, twoAheadSquare), position.opponent, true)
-    } //TODO take
-    theSet.toSet
-    //TODO en passant
+      theSet += new Position(newBoardWithout.add(pawn, twoAheadSquare), position.opponent)
+    } else if (canTakeRight(square, position)._1) {
+      theSet += new Position(newBoardWithout
+        .without(canTakeRight(square, position)._2.get), position.opponent)
+    } else if (canTakeLeft(square, position)._1) {
+      theSet += new Position(newBoardWithout
+        .without(canTakeLeft(square, position)._2.get), position.opponent)
+    } else if (position.enPassantRow.nonEmpty) {
+      //todo
+    }
+    theSet.toSet.filter(isLegal)
   }
 
-  def canTakeRight(square: Square, pos: Position) : Boolean = {
-    if(pawnAheadSquare(square, pos.inTheMove).right().nonEmpty) {
-      if(pos.board.occupants.)
-    }
+  //todo - make sure you didnt expose a self-check or something..
+  def isLegal(pos: Position): Boolean = true
 
-    false
+  def canTakeRight(square: Square, pos: Position) : (Boolean, Option[Square]) = {
+    val toSquare: Option[Square] = pawnAheadSquare(square, pos.inTheMove).right()
+    if(toSquare.nonEmpty) {
+      val pieceAt: Option[Piece] = pos.board.pieceAt(toSquare.get)
+      if(pieceAt.nonEmpty && pieceAt.get.color != pos.inTheMove) {
+        (true, toSquare)
+      }
+    }
+    (false, None)
+  }
+
+  def canTakeLeft(square: Square, pos: Position) : (Boolean, Option[Square]) = {
+    val toSquare: Option[Square] = pawnAheadSquare(square, pos.inTheMove).left()
+    if(toSquare.nonEmpty) {
+      val pieceAt: Option[Piece] = pos.board.pieceAt(toSquare.get)
+      if(pieceAt.nonEmpty && pieceAt.get.color != pos.inTheMove) {
+        (true, toSquare)
+      }
+    }
+    (false, None)
   }
 
   private val pawnAheadSquare : ((Square, Color) => Square) = (square, color) =>

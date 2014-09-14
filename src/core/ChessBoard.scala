@@ -4,7 +4,14 @@ class ChessBoard(val occupants: List[(Piece, Square)]) {
   def add(piece: Piece, square: Square): ChessBoard = new ChessBoard(occupants.::(piece, square))
   def without(square: Square): ChessBoard = new ChessBoard(occupants.filter(t => t._2 != square))
   def isVacant(square: Square) = occupants.exists(ps => ps._2 == square)
-  def pieceAt(square: Square): Option[Piece] = None//todo pick up here
+  def pieceAt(square: Square): Option[Piece] = {
+    val filtered: List[(Piece, Square)] = occupants.filter(t => t._2 == square)
+    if (filtered.isEmpty) {
+      None
+    } else {
+      Some(filtered.head._1)
+    }
+  }
 }
 
 case class Piece(pieceType: PieceType, color: Color)
