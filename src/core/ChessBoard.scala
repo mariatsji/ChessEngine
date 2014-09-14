@@ -4,6 +4,7 @@ class ChessBoard(val occupants: List[(Piece, Square)]) {
   def add(piece: Piece, square: Square): ChessBoard = new ChessBoard(occupants.::(piece, square))
   def without(square: Square): ChessBoard = new ChessBoard(occupants.filter(t => t._2 != square))
   def isVacant(square: Square) = occupants.exists(ps => ps._2 == square)
+  def pieceAt(square: Square): Option[Piece] = None//todo pick up here
 }
 
 case class Piece(pieceType: PieceType, color: Color)
@@ -23,6 +24,11 @@ case class King() extends PieceType(999f)
 case class Square(file: Char, row: Short) {
   require(row >= 0 && row <=8)
   require(List('A','B','C','D','E','F','G','H').contains(file))
+
+  def right() : Option[Square] = if (file != 'H') Some(Square((file.toInt + 1).toChar, row)) else None
+  def left() : Option[Square] = if (file != 'A') Some(Square((file.toInt - 1).toChar, row)) else None
+
+
 }
 
 object ChessBoardBuilder {

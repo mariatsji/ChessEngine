@@ -34,7 +34,13 @@ class MoveChecker {
     //TODO en passant
   }
 
-  
+  def canTakeRight(square: Square, pos: Position) : Boolean = {
+    if(pawnAheadSquare(square, pos.inTheMove).right().nonEmpty) {
+      if(pos.board.occupants.)
+    }
+
+    false
+  }
 
   private val pawnAheadSquare : ((Square, Color) => Square) = (square, color) =>
     Square(square.file, (square.row + 1).toShort)
