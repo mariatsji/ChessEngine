@@ -23,11 +23,13 @@ class MoveParser {
     (r.findFirstIn(algebraic).getOrElse(""), r.replaceFirstIn(algebraic, ""))
   }
 
-  def parse(board:ChessBoard, algebraic:String) : ChessBoard = {
+  def parse(position:Position, algebraic:String) : Position = {
     val (toSquareS, restAlg) = toSquareString(algebraic)
+    val toSquare = Square(toSquareS.toCharArray()(0),toSquareS.toCharArray()(1).toShort)
     //found the to square
+
     //from square/piece -> find piece that can legally move to that square
-    board//TODO
+    position
   }
 
 }
