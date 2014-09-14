@@ -11,13 +11,13 @@ trait Color
 object White extends Color
 object Black extends Color
 
-class PieceType
-case class Pawn() extends PieceType
-case class Knight() extends PieceType
-case class Bishop() extends PieceType
-case class Rook() extends PieceType
-case class Queen() extends PieceType
-case class King() extends PieceType
+class PieceType(val value: Float)
+case class Pawn() extends PieceType(1f)
+case class Knight() extends PieceType(3f)
+case class Bishop() extends PieceType(3f)
+case class Rook() extends PieceType(5f)
+case class Queen() extends PieceType(9f)
+case class King() extends PieceType(999f)
 
 case class Square(file: Char, row: Short) {
   require(row >= 0 && row <=8)
@@ -26,7 +26,7 @@ case class Square(file: Char, row: Short) {
 
 object ChessBoardBuilder {
 
-  def build() =
+  def newBoard() =
     new ChessBoard(List((Piece(new Rook(), White), Square('A', 1))))
       .add(Piece(new Knight(), White), Square('B', 1))
       .add(Piece(new Bishop(), White), Square('C', 1))
