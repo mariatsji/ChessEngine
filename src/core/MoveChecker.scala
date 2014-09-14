@@ -14,34 +14,34 @@ class MoveChecker {
     }
   }
 
-  def pawnCanGoTo (position: Position, tuple: (Piece, Square)): Set[Position] =
-    whitePawnCanGoTo(position, tuple) ++ blackPawnCanGoTo(position, tuple)
-
-  def blackPawnCanGoTo(position: Position, tuple: (Piece, Square)): Set[Position] = ???
-
-
-  def whitePawnCanGoTo(position: Position, tuple: (Piece, Square)): Set[Position] = {
+  def pawnCanGoTo(position: Position, tuple: (Piece, Square)): Set[Position] = {
     val theSet = new scala.collection.mutable.HashSet[Position]
     val (pawn, square) = tuple
     val newBoardWithout = position.board.without(square)
-    val aheadSquare = Square(square.file, (square.row + 1).toShort)
-    val twoAheadSquare = Square(square.file, (square.row + 2).toShort)
-    if(position.board.isVacant(aheadSquare) && aheadSquare.row != 8) {
-      theSet += new Position(newBoardWithout.add(pawn, aheadSquare), Black, false)
-    } else if (aheadSquare.row == 8) {
-      val newQueen = Piece(Queen(), pawn.color)
-      val newRook = Piece(Rook(), pawn.color)
-      val newBishop = Piece(Bishop(), pawn.color)
-      val newKnight = Piece(Knight(), pawn.color)
-      theSet += new Position(newBoardWithout.add(newQueen, aheadSquare), Black, false)
-      theSet += new Position(newBoardWithout.add(newRook, aheadSquare), Black, false)
-      theSet += new Position(newBoardWithout.add(newBishop, aheadSquare), Black, false)
-      theSet += new Position(newBoardWithout.add(newKnight, aheadSquare), Black, false)
-    } else if ((square.row == 2) && position.board.isVacant(twoAheadSquare)) {
-      theSet += new Position(newBoardWithout.add(pawn, twoAheadSquare), Black, false)//TODO: enPassant
+    val aheadSquare = pawnAheadSquare(square, pawn.color)
+    val twoAheadSquare = pawnAheadSquare(aheadSquare, pawn.color)
+    if(position.board.isVacant(aheadSquare) && !isPromotionRow(aheadSquare, pawn.color)) {
+      theSet += new Position(newBoardWithout.add(pawn, aheadSquare), position.opponent, false)
+    } else if (isPromotionRow(aheadSquare, pawn.color)) {
+      theSet += new Position(newBoardWithout.add(Piece(Queen(), pawn.color), aheadSquare), position.opponent, false)
+      theSet += new Position(newBoardWithout.add(Piece(Rook(), pawn.color), aheadSquare), position.opponent, false)
+      theSet += new Position(newBoardWithout.add(Piece(Bishop(), pawn.color), aheadSquare), position.opponent, false)
+      theSet += new Position(newBoardWithout.add(Piece(Knight(), pawn.color), aheadSquare), position.opponent, false)
+    } else if (isStartRow(square, pawn.color) && position.board.isVacant(twoAheadSquare)) {
+      theSet += new Position(newBoardWithout.add(pawn, twoAheadSquare), position.opponent, true)
     } //TODO take
     theSet.toSet
+    //TODO en passant
   }
+
+  
+
+  private val pawnAheadSquare : ((Square, Color) => Square) = (square, color) =>
+    Square(square.file, (square.row + 1).toShort)
+
+  private def isPromotionRow(square: Square, color:Color) = if(color == White) square.row == 8 else square.row == 1
+
+  private def isStartRow(square: Square, color:Color) = if(color == White) square.row == 2 else square.row == 7
 
   def knightCanGoTo(position: Position, tuple: (Piece, Square)): Set[Position] = ???
 
