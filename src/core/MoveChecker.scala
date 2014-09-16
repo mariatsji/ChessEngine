@@ -2,13 +2,11 @@ package core
 
 class MoveChecker {
 
-
-
   def possiblePositions(pos: Position, ps: (Piece,Square)) : Set[Position] = {
     val piece = ps._1
     piece.pieceType match {
       case Pawn() => PawnChecker.pawnCanGoTo(pos, ps)
-      case Knight() => KnightChecker.knightCanGoTo(pos, ps)
+      case Knight() => new KnightChecker().canGoTo(pos, ps)
       case Bishop() => bishopCanGoTo(pos, ps)
       case Rook() => rookCanGoTo(pos, ps)
       case Queen() => queenCanGoTo(pos, ps)
@@ -31,5 +29,9 @@ object MoveChecker {
 
   //todo - make sure you didnt expose a self-check or something..
   def isLegal(pos: Position): Boolean = true
+
+  def isCheck(pos: Position): Boolean = ???
+
+  def isMate(pos: Position): Boolean = ???
 
 }

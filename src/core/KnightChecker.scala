@@ -1,10 +1,10 @@
 package core
 
-object KnightChecker {
+class KnightChecker extends AbstractMoveChecker {
 
-  def knightCanGoTo(position: Position, tuple: (Piece, Square)): Set[Position] = {
 
-    val (knight, square) = tuple
+  override def allPossibleSquares(position: Position, tuple: (Piece, Square)): Set[Square] = {
+    val (_, square) = tuple
     val newBoardWithout = position.board.without(square)
 
     val twoUpOneLeft = Square((square.file.toInt - 1).toChar, (square.row + 2).toShort)
@@ -18,13 +18,6 @@ object KnightChecker {
 
     Set(twoUpOneLeft, twoUpOneRight, twoDownOneLeft, twoDownOneRight, oneUpTwoLeft,
       oneUpTwoRight, oneDownTwoLeft, oneDownTwoRight)
-      .filter(Square.isInsideBoard)
-      .filter(!Position.ownPieceOccupySquare(position, _))
-      .map {
-        s => new Position(newBoardWithout.add(knight, s), position.opponent
-      )
-    }//todo take
-
   }
 
 }
