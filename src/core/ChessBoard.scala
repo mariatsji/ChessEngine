@@ -1,11 +1,18 @@
 package core
 
-import scala.util.Try
-
 class ChessBoard(val occupants: List[(Piece, Square)]) {
+
   def add(piece: Piece, square: Square): ChessBoard = new ChessBoard(occupants.::(piece, square))
+
   def without(square: Square): ChessBoard = new ChessBoard(occupants.filter(t => t._2 != square))
+
   def isVacant(square: Square) = !occupants.exists(ps => ps._2 == square)
+
+  def hasThisColorPieceAtSquare(square: Square, color: Color) = pieceAt(square) match {
+    case None => false
+    case Some(piece) => piece.color == color
+  }
+
   def pieceAt(square: Square): Option[Piece] = {
     val filtered: List[(Piece, Square)] = occupants.filter(t => t._2 == square)
     if (filtered.isEmpty) {
@@ -14,6 +21,15 @@ class ChessBoard(val occupants: List[(Piece, Square)]) {
       Some(filtered.head._1)
     }
   }
+
+  def isLegal = noPiecesOutsideBoard && onlyOnePiecePrSquare
+
+  def noPiecesOutsideBoard = occupants.exists(p => !inside(p._2))
+
+  def onlyOnePiecePrSquare = occupants.map(_._2).distinct.size == occupants.size
+
+  private def inside(s: Square) = List('A','B','C','D','E','F','G','H').contains(s.file) && s.row >= 1 && s.row <=8
+
 }
 
 case class Piece(pieceType: PieceType, color: Color)
@@ -41,12 +57,6 @@ case class Square(file: Char, row: Short) {
   def leftOption() : Option[Square] = if (file != 'A') Some(Square((file.toInt - 1).toChar, row)) else None
   def upOption() : Option[Square] = if (row != 8) Some(Square(file, (row + 1).toShort)) else None
   def downOption() : Option[Square] = if (row != 8) Some(Square(file, (row + 1).toShort)) else None
-
-}
-
-object Square {
-
-  def isInsideBoard (s: Square) = List('A','B','C','D','E','F','G','H').contains(s.file) && s.row >= 1 && s.row <=8
 
 }
 

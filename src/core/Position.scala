@@ -4,15 +4,18 @@ case class Position(board: ChessBoard, inTheMove: Color, enPassantRow: Option[Ch
 
   def opponent = if (inTheMove == White) Black else White
 
-}
-
-object Position {
-
- def ownPieceOccupySquare(pos: Position, square: Square) : Boolean = {
-    pos.board.pieceAt(square) match {
+  def ownPieceOccupySquare(square: Square) : Boolean = {
+    board.pieceAt(square) match {
       case None => false
-      case Some(piece) => piece.color == pos.inTheMove
+      case Some(piece) => piece.color == inTheMove
     }
   }
+
+  //todo - make sure you didnt expose a self-check or something..
+  def isLegal: Boolean = board.isLegal
+
+  def isCheck: Boolean = ???
+
+  def isMate: Boolean = ???
 
 }

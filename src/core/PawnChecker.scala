@@ -30,7 +30,7 @@ object PawnChecker {
     if (position.enPassantRow.nonEmpty) {
       //todo
     }
-    theSet.toSet.filter(MoveChecker.isLegal)
+    theSet.toSet.filter(_.isLegal)
   }
 
 

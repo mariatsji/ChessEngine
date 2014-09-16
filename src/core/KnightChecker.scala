@@ -2,11 +2,7 @@ package core
 
 class KnightChecker extends AbstractMoveChecker {
 
-
-  override def allPossibleSquares(position: Position, tuple: (Piece, Square)): Set[Square] = {
-    val (_, square) = tuple
-    val newBoardWithout = position.board.without(square)
-
+  def squareSet(square: Square) =  {
     val twoUpOneLeft = Square((square.file.toInt - 1).toChar, (square.row + 2).toShort)
     val twoUpOneRight = Square((square.file.toInt + 1).toChar, (square.row + 2).toShort)
     val twoDownOneLeft = Square((square.file.toInt - 1).toChar, (square.row - 2).toShort)
@@ -18,6 +14,23 @@ class KnightChecker extends AbstractMoveChecker {
 
     Set(twoUpOneLeft, twoUpOneRight, twoDownOneLeft, twoDownOneRight, oneUpTwoLeft,
       oneUpTwoRight, oneDownTwoLeft, oneDownTwoRight)
+  }
+
+  override def possibleVacantSquareMoves(position: Position, tuple: (Piece, Square)): Set[Position] = {
+    val (knight, square) = tuple
+    val newBoardWithout = position.board.without(square)
+    squareSet(square)
+      .filter(newBoardWithout.isVacant)
+      .map(s => new Position(newBoardWithout.add(knight, s), position.opponent))
+  }
+
+  override def possibleTakes(position: Position, tuple: (Piece, Square)): Set[Position] = {
+    val (knight, square) = tuple
+    val newBoardWithout = position.board.without(square)
+
+    squareSet(square)
+      .filter(s => newBoardWithout.hasThisColorPieceAtSquare(s, position.opponent))
+      .map(s => new Position(newBoardWithout.without(s).add(knight, s), position.opponent))
   }
 
 }

@@ -24,14 +24,3 @@ class MoveChecker {
 
 
 }
-
-object MoveChecker {
-
-  //todo - make sure you didnt expose a self-check or something..
-  def isLegal(pos: Position): Boolean = true
-
-  def isCheck(pos: Position): Boolean = ???
-
-  def isMate(pos: Position): Boolean = ???
-
-}
