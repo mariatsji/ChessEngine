@@ -1,6 +1,8 @@
 package core
 
-object PawnChecker {
+class PawnChecker extends AbstractMoveChecker {
+
+  override def positionsReachable(position: Position, tuple: (Piece, Square)) = pawnCanGoTo(position, tuple)
 
   def pawnCanGoTo(position: Position, tuple: (Piece, Square)): Set[Position] = {
     val theSet = new scala.collection.mutable.HashSet[Position]
@@ -63,7 +65,6 @@ object PawnChecker {
   private def isPromotionRow(square: Square, color:Color) = if(color == White) square.row == 8 else square.row == 1
 
   private def isStartRow(square: Square, color:Color) = if(color == White) square.row == 2 else square.row == 7
-
 
 }
 

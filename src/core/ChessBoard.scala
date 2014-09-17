@@ -22,13 +22,17 @@ class ChessBoard(val occupants: List[(Piece, Square)]) {
     }
   }
 
-  def isLegal = noPiecesOutsideBoard && onlyOnePiecePrSquare
+  def isLegal = noPiecesOutsideBoard && onlyOnePiecePrSquare && bothSidesHasKing
 
-  def noPiecesOutsideBoard = occupants.exists(p => !inside(p._2))
+  def bothSidesHasKing = whiteHasKing && blackHasKing
+
+  def whiteHasKing = occupants.exists(t => t._1.pieceType == King() && t._1.color == White)
+
+  def blackHasKing = occupants.exists(t => t._1.pieceType == King() && t._1.color == Black)
+
+  def noPiecesOutsideBoard = !occupants.exists(p => !p._2.inside)
 
   def onlyOnePiecePrSquare = occupants.map(_._2).distinct.size == occupants.size
-
-  private def inside(s: Square) = List('A','B','C','D','E','F','G','H').contains(s.file) && s.row >= 1 && s.row <=8
 
 }
 
@@ -57,6 +61,8 @@ case class Square(file: Char, row: Short) {
   def leftOption() : Option[Square] = if (file != 'A') Some(Square((file.toInt - 1).toChar, row)) else None
   def upOption() : Option[Square] = if (row != 8) Some(Square(file, (row + 1).toShort)) else None
   def downOption() : Option[Square] = if (row != 8) Some(Square(file, (row + 1).toShort)) else None
+
+  def inside = List('A','B','C','D','E','F','G','H').contains(file) && row >= 1 && row <=8
 
 }
 

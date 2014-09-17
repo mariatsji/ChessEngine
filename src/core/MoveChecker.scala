@@ -5,7 +5,7 @@ class MoveChecker {
   def possiblePositions(pos: Position, ps: (Piece,Square)) : Set[Position] = {
     val piece = ps._1
     piece.pieceType match {
-      case Pawn() => PawnChecker.pawnCanGoTo(pos, ps)
+      case Pawn() => new PawnChecker().pawnCanGoTo(pos, ps)
       case Knight() => new KnightChecker().canGoTo(pos, ps)
       case Bishop() => bishopCanGoTo(pos, ps)
       case Rook() => rookCanGoTo(pos, ps)
